@@ -9,7 +9,9 @@
 #define FOSC 16000000
 #define MYUBRR FOSC/16/BAUD-1
 
-char txchar = 'H';
+//char txchar = 'H';
+char *myname = "Neil Sawbridge\n";  // char array for testing putstr function
+
 
 int main () {
 	uart_init(MYUBRR); // initalise uart for transmit and receive.
@@ -19,7 +21,9 @@ int main () {
 	while (true) {
 		//PORTB ^= (1<<PB3); // Using XOR to toggle between on and off.
 		//_delay_ms(BLINK_MS);
-		uart_putchar(txchar);  // transmit character using txchar.
+		//uart_putchar(txchar);  // transmit character using txchar.
+				
+		uart_putstr(myname);
 		_delay_ms(BLINK_MS);
 	}
 }

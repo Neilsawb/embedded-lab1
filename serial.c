@@ -3,6 +3,7 @@
 #include "serial.h"
 #define BAUD 38400
 #define FOSC 16000000
+#define BLINK_MS 500
 
 void uart_init(unsigned int ubrr) {
 	UBRR0H = (unsigned char)(ubrr>>8);
@@ -20,14 +21,15 @@ void uart_putchar(char chr) {
  	/* Put data into buffer, sends the data */
 	UDR0 = chr;
 	if (chr == '\n') {
-		UDR0 = chr; // add carriage return if new line is sent.
+		UDR0 = '\r'; // add carriage return if new line is sent.
 	}
 }
 
-void uart_putstr(const char *str)
+void uart_putstr(char *str)
 {
 	unsigned char j=0;
-	
+	char chr;
+		
 	while (str[j]!=0)		/* Send string till null */
 	{
 		uart_putchar(str[j]);	

@@ -3,7 +3,7 @@
 
 void uart_init(unsigned int ubrr);
 void uart_putchar(char chr);
-void uart_putstr(const char *str);
+void uart_putstr(char *str);
 
 char uart_getchar(void);
 
