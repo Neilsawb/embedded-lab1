@@ -28,8 +28,7 @@ void uart_putchar(char chr) {
 void uart_putstr(char *str)
 {
 	unsigned char j=0;
-	char chr;
-		
+			
 	while (str[j]!=0)		/* Send string till null */
 	{
 		uart_putchar(str[j]);	
@@ -37,6 +36,18 @@ void uart_putstr(char *str)
 	}
 }
 
+char uart_getchar(void) {
+	while (!( UCSR0A & (1<<RXC0))) { }; // Do nothing until data have been received
+	// Return data from register UDR0.
+	return UDR0;
+}
+
+void uart_echo() {
+	char echoData;
+	echoData = uart_getchar();
+	_delay_ms(1000);
+	uart_putchar(echoData);
+}
 
 
 

@@ -15,15 +15,17 @@ char *myname = "Neil Sawbridge\n";  // char array for testing putstr function
 
 int main () {
 	uart_init(MYUBRR); // initalise uart for transmit and receive.
-
 	//DDRB |= (1<<PB3); // output pin
-	
+		
 	while (true) {
 		//PORTB ^= (1<<PB3); // Using XOR to toggle between on and off.
 		//_delay_ms(BLINK_MS);
 		//uart_putchar(txchar);  // transmit character using txchar.
 				
-		uart_putstr(myname);
+		//uart_putstr(myname);
+
+		uart_echo();
 		_delay_ms(BLINK_MS);
+
 	}
 }
