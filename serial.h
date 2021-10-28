@@ -7,7 +7,9 @@ void uart_putstr(char *str);
 
 char uart_getchar(void);
 
-void uart_echo(void);
+char uart_echo(void);
+void uart_UDRE(char chr);
+void ledONOFF();
 
 #endif
 

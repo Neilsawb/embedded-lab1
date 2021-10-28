@@ -1,6 +1,9 @@
 #include <avr/io.h>
 #include <util/delay.h>
 #include "serial.h"
+#include <stddef.h>
+#include <string.h>
+
 #define BAUD 38400
 #define FOSC 16000000
 #define BLINK_MS 500
@@ -14,14 +17,18 @@ void uart_init(unsigned int ubrr) {
  	UCSR0C = (1<<UCSZ01)|(1<<UCSZ00);
 }
 
+void uart_UDRE(char chr) {
+	while ( !( UCSR0A & (1<<UDRE0)) );
+	UDR0 = chr;
+}
+
 
 void uart_putchar(char chr) {
 	/* Wait for empty transmit buffer */
- 	while ( !( UCSR0A & (1<<UDRE0)) );
- 	/* Put data into buffer, sends the data */
-	UDR0 = chr;
+ 	uart_UDRE(chr); // assign chr to UDR0.
+
 	if (chr == '\n') {
-		UDR0 = '\r'; // add carriage return if new line is sent.
+		uart_UDRE('\r'); // add carriage return if new line is sent.
 	}
 }
 
@@ -42,12 +49,43 @@ char uart_getchar(void) {
 	return UDR0;
 }
 
-void uart_echo() {
+char uart_echo() {
 	char echoData;
 	echoData = uart_getchar();
-	_delay_ms(1000);
+	_delay_ms(500);
 	uart_putchar(echoData);
+	return echoData;
 }
+
+void ledONOFF() {
+	int index = 0;
+	char inputBuffer[100];
+	char newCharacter;
+
+	while (1) {
+		newCharacter = uart_echo();
+		if (newCharacter == '\r' || newCharacter == '\n') {
+			inputBuffer[index++] = '\0'; // add '\0' to intputbuffer so strcmp can function
+			if (!strcmp(inputBuffer, "on")) {
+				PORTB &= ~(1 << PORTB3); // Led on.
+				_delay_ms(500);
+			}
+			if (!strcmp(inputBuffer, "off")) {
+				PORTB |= (1 << PORTB3); // Led Off.
+				_delay_ms(500);
+			}
+			index = 0; // Reset index after command processed.
+			memset(inputBuffer, 0, sizeof(inputBuffer));  // reset intputBuffer.
+			uart_UDRE('\n'); // Send a new line to the terminal.
+
+		} else {
+			inputBuffer[index++] = newCharacter;
+		}
+	}        
+}
+	
+
+
 
 
 
