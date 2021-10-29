@@ -1,6 +1,7 @@
 #include <avr/io.h>
 #include <util/delay.h>
 #include "serial.h"
+<<<<<<< HEAD
 #include <stddef.h>
 #include <string.h>
 
@@ -88,4 +89,6 @@ void ledONOFF() {
 
 
 
+=======
+>>>>>>> parent of 68ace31... added uart init, putchar and putstr, tested putchar - Ok
 
