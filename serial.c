@@ -63,6 +63,7 @@ void ledONOFF() {
 	char newCharacter;
 
 	while (1) {
+		// ’ON\r\n’ and ’OFF\r\n’ => (putty ctrl-M '\r' och ctrl-J '\n' )  
 		newCharacter = uart_echo();
 		if (newCharacter == '\r' || newCharacter == '\n') {
 			inputBuffer[index++] = '\0'; // add '\0' to intputbuffer so strcmp can function
@@ -77,7 +78,6 @@ void ledONOFF() {
 			index = 0; // Reset index after command processed.
 			memset(inputBuffer, 0, sizeof(inputBuffer));  // reset intputBuffer.
 			uart_UDRE('\n'); // Send a new line to the terminal.
-
 		} else {
 			inputBuffer[index++] = newCharacter;
 		}
